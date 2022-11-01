@@ -42,12 +42,29 @@ inquirer.prompt([
                     console.table(results);
                   });
           }
-          // select all values from department table
+          // select all values from department table 
           else if(input.sqlOperation==="View all departments"){
                db.query('SELECT * FROM department', function (err, results) {
                     console.table(results);
                   });
           }
+          else if(input.sqlOperation==="Add department"){
+               inquirer.prompt([
+                    {
+                         type: 'input',
+                         name: 'addDept',
+                         message: 'Enter new Department name'
+                    }
+                      
+                  ])
+               
+                  .then((input)=>{
+
+               db.query('insert into department (deptname) values (?)', input.addDept, function (err, results) {
+                    console.log(err);
+                  });
+               }
+          )}
      }
    );
 
