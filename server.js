@@ -36,12 +36,64 @@ inquirer.prompt([
                     console.table(results);
                   });
           }
+
+          else if(input.sqlOperation==="Add Employee"){
+               inquirer.prompt([
+                    {
+                         type: 'input',
+                         name: 'empFirst',
+                         message: 'Enter Employee First name'
+                    },
+                    {
+                         type: 'input',
+                         name: 'empLast',
+                         message: 'Enter Employee Last name'
+                    },
+                    {
+                         type: 'input',
+                         name: 'roleId',
+                         message: 'Enter new Employee role id'
+                    },
+                    {
+                         type: 'input',
+                         name: 'mgrId',
+                         message: 'Enter new Employee Manager Id'
+                    }
+                  ])
+               .then((input)=>{
+               db.query('INSERT INTO  employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [input.empFirst,input.empLast,input.roleId,input.mgrId] , 
+               function (err) {console.log(err); });
+               }
+          )}
           // select all values from role table
           else if(input.sqlOperation==="View all role"){
                db.query('SELECT * FROM emprole', function (err, results) {
                     console.table(results);
                   });
           }
+          else if(input.sqlOperation==="Add role"){
+               inquirer.prompt([
+                    {
+                         type: 'input',
+                         name: 'title',
+                         message: 'Enter Job Title'
+                    },
+                    {
+                         type: 'input',
+                         name: 'salary',
+                         message: 'Enter Salary'
+                    },
+                    {
+                         type: 'input',
+                         name: 'dept',
+                         message: 'Enter Department id'
+                    }
+                  ])
+               .then((input)=>{
+               db.query('INSERT INTO emprole (title, salary, department_id) VALUES (?,?,?)', [input.title,input.salary,input.dept] , 
+               function (err) {console.log(err); });
+               }
+          )}
           // select all values from department table 
           else if(input.sqlOperation==="View all departments"){
                db.query('SELECT * FROM department', function (err, results) {
@@ -55,12 +107,9 @@ inquirer.prompt([
                          name: 'addDept',
                          message: 'Enter new Department name'
                     }
-                      
                   ])
-               
-                  .then((input)=>{
-
-               db.query('insert into department (deptname) values (?)', input.addDept, function (err, results) {
+               .then((input)=>{
+               db.query('INSERT INTO department(deptname) VALUES (?)', input.addDept, function (err, results) {
                     console.log(err);
                   });
                }
