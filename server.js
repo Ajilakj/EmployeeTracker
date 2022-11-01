@@ -33,19 +33,19 @@ inquirer.prompt([
           // select all values from employee table
           if(input.sqlOperation==="View All employees"){
                db.query('SELECT * FROM employee', function (err, results) {
-                    console.log(results);
+                    console.table(results);
                   });
           }
           // select all values from role table
           else if(input.sqlOperation==="View all role"){
                db.query('SELECT * FROM emprole', function (err, results) {
-                    console.log(results);
+                    console.table(results);
                   });
           }
           // select all values from department table
           else if(input.sqlOperation==="View all departments"){
                db.query('SELECT * FROM department', function (err, results) {
-                    console.log(results);
+                    console.table(results);
                   });
           }
      }
