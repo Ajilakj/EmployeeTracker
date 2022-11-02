@@ -32,7 +32,7 @@ inquirer.prompt([
    .then((input)=>{
           // select all values from employee table
           if(input.sqlOperation==="View All employees"){
-               db.query('SELECT * FROM employee', function (err, results) {
+               db.query('SELECT CONCAT(first_name,"  ",last_name) AS Full_Nmae, title,salary FROM employee JOIN emprole ON employee.role_id=emprole.id', function (err, results) {
                     console.table(results);
                   });
           }
@@ -62,38 +62,51 @@ inquirer.prompt([
                   ])
                .then((input)=>{
                db.query('INSERT INTO  employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [input.empFirst,input.empLast,input.roleId,input.mgrId] , 
-               function (err) {console.log(err); });
+               function (err) {if(err)console.log(err); });
+               db.query('SELECT * FROM employee', function (err, results) {
+                    console.table(results);
+                  });
                }
+              
           )}
           // select all values from role table
           else if(input.sqlOperation==="View all role"){
-               db.query('SELECT * FROM emprole', function (err, results) {
+               db.query('SELECT * FROM emprole JOIN department ON emprole.department_id=department.id', function (err, results) {
                     console.table(results);
                   });
           }
           else if(input.sqlOperation==="Add role"){
-               inquirer.prompt([
-                    {
-                         type: 'input',
-                         name: 'title',
-                         message: 'Enter Job Title'
-                    },
-                    {
-                         type: 'input',
-                         name: 'salary',
-                         message: 'Enter Salary'
-                    },
-                    {
-                         type: 'input',
-                         name: 'dept',
-                         message: 'Enter Department id'
-                    }
-                  ])
-               .then((input)=>{
-               db.query('INSERT INTO emprole (title, salary, department_id) VALUES (?,?,?)', [input.title,input.salary,input.dept] , 
-               function (err) {console.log(err); });
-               }
-          )}
+               db.query('SELECT deptname FROM department', function (dept) {
+               
+                   // console.table(dept);
+                    inquirer.prompt([
+                         {
+                              type: 'input',
+                              name: 'title',
+                              message: 'Enter Job Title'
+                         },
+                         {
+                              type: 'input',
+                              name: 'salary',
+                              message: 'Enter Salary'
+                         },
+                         {
+                              type: 'list',
+                              name: 'deptname',
+                              message: 'Select department',
+                              choices: dept
+                         }
+                       ])
+                         .then((input)=>{
+                         db.query('INSERT INTO emprole (title, salary, department_id) VALUES (?,?,?)', [input.title,input.salary,input.dept] , 
+                         function (err) {if(err)console.log(err); });
+                         db.query('SELECT * FROM emprole', function (err, results) {
+                         console.table(results); });
+                         }
+                         );
+               }     
+     
+   )}
           // select all values from department table 
           else if(input.sqlOperation==="View all departments"){
                db.query('SELECT * FROM department', function (err, results) {
@@ -110,7 +123,10 @@ inquirer.prompt([
                   ])
                .then((input)=>{
                db.query('INSERT INTO department(deptname) VALUES (?)', input.addDept, function (err, results) {
-                    console.log(err);
+                    if(err)console.log(err);
+                  });
+                  db.query('SELECT * FROM department', function (err, results) {
+                    console.table(results);
                   });
                }
           )}

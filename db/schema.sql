@@ -30,7 +30,7 @@ CREATE TABLE employee(
      REFERENCES emprole(id)
      ON DELETE SET NULL ,
      FOREIGN KEY (manager_id)
-     REFERENCES emprole(id)
+     REFERENCES employee(id)
      ON DELETE SET NULL 
 );
 
